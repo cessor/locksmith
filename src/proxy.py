@@ -70,9 +70,9 @@ def configuration():
     USERNAME = 'PROXY_USER'
     PASSWORD = 'PROXY_PASSWORD'
 
-    proxy_url = os.environ.get(PROXY_URL)
-    username = os.environ.get(USERNAME)
-    password = os.environ.get(PASSWORD)
+    proxy_url = os.environ.get(PROXY_URL).strip()
+    username = os.environ.get(USERNAME).strip()
+    password = os.environ.get(PASSWORD).strip()
 
     if not all([username, password, proxy_url]):
         raise ProxyConfigurationIncomplete()
