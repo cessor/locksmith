@@ -4,6 +4,7 @@
 import logging
 import os
 import requests
+from cookiejar import Cookies
 
 
 class ProxyConfigurationIncomplete(Exception):
