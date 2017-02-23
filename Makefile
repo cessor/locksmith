@@ -1,4 +1,4 @@
-.PHONY: locksmith run clean inspect pw
+.PHONY: locksmith run clean inspect pw nginx server
 locksmith:
 	docker build -t cessor/locksmith -f Dockerfile .
 
@@ -7,7 +7,7 @@ run:
 	@docker run --name locksmith \
 	-e PROXY_USER=$(PROXY_USER) \
 	-e PROXY_PASSWORD=$(PROXY_PASSWORD) \
-	-e PROXY_URL=$(PROXY_URL)\
+	-e PROXY_URL=$(PROXY_URL) \
 	-d \
 	cessor/locksmith
 
