@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+{% block title %}Agents{% end %}
+{% block content%}
+<br>
+<br>
+<div class="ui container">
+    <!-- Agents Table -->
+    <div class="ui segment">
+        <h1 class="ui header">Agents</h1>
+        <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Token</th>
+                    <th>Status*</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for agent in agents %}
+            <tr>
+                <td>{{ agent.name }}</td>
+                <td class="code">
+                    {{ agent.token }}
+                </td>
+                <td>
+                    {% if agent.active %}Active{% else %}Inactive{% end %}
+                </td>
+                <td>
+                    <a class="ui small button" href="/auth/{{ agent.token }}">Create Session</a>
+                </td>
+                <td>
+                    {% if agent.active %}
+                        <a href="/toggle/{{ agent.token }}" class="ui red button">Deactivate</a>
+                    {% end %}
+                    {% if not agent.active %}
+                        <a href="/toggle/{{ agent.token }}" class="ui blue button">Reactivate</a>
+                    {% end %}
+                </td>
+                <td>
+                    <a href="/remove/{{ agent.token }}" class="ui red button">Remove</a>
+                </td>
+            </tr>
+    {% end %}
+          </tbody>
+        </table>
+        <p class="ui small light">
+        * Deactivated means that this agent can't use this service to log in.
+        </p>
+    </div>
+    <div class="ui segment">
+          <form class="ui large form" action="/add" method="post">
+            {% module xsrf_form_html() %}
+            <h1 class="ui header">Add new Agent</h1>
+            <div class="two fields">
+                <div class="field">
+                    <label>Name</label>
+                    <input type="text" name="name">
+                </div>
+                <div class="field">
+                    <label>Token</label>
+                    <input type="text" name="token">
+                </div>
+            </div>
+            <button class="ui green button" type="submit">Add</button>
+        </form>
+    </div>
+
+    <a href="/logout" class="ui button floated right">Logout</a>
+</div>
+{% end %}
