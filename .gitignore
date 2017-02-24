@@ -1,6 +1,6 @@
 *.sqlite
 .secret
-*config.cfg
+*.cfg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
