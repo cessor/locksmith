@@ -9,6 +9,6 @@ RUN python3 get-pip.py
 RUN pip3 install tornado
 RUN pip3 install requests
 
-ADD ./src /var/auth
+ADD ./src /var/locksmith
 
-CMD python3 /var/auth/serve.py
+CMD python3 /var/locksmith/serve.py
