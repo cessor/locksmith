@@ -1,3 +1,0 @@
-export PROXY_USER=
-export PROXY_PASSWORD=
-export PROXY_URL=

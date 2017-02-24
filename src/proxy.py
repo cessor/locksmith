@@ -51,6 +51,7 @@ class Proxy(object):
                 'pass': self._password
             }
         )
+
         return response
 
     def login(self):
@@ -66,25 +67,10 @@ class Proxy(object):
         return self._pickled_cookie_jar(session)
 
 
-def configuration():
-    '''Reads in the configuration for the proxy from the environment.
-    This could be more modular.'''
-    PROXY_URL = 'PROXY_URL'
-    USERNAME = 'PROXY_USER'
-    PASSWORD = 'PROXY_PASSWORD'
+def initialize(proxy_url, username, password, logger):
 
-    proxy_url = os.environ.get(PROXY_URL).strip()
-    username = os.environ.get(USERNAME).strip()
-    password = os.environ.get(PASSWORD).strip()
-
-    if not all([username, password, proxy_url]):
+    if not all([proxy_url, username, password]):
         raise ProxyConfigurationIncomplete()
-
-    return proxy_url, username, password
-
-
-def initialize(logger):
-    proxy_url, username, password = configuration()
 
     proxy = Proxy(
         session=requests.Session,

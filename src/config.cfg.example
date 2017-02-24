@@ -1,0 +1,6 @@
+debug=True
+loglevel='INFO'
+port=8888
+proxy_url=''
+proxy_user=''
+proxy_password=''

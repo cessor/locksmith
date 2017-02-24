@@ -18,6 +18,9 @@ from handlers import *
 define('debug', default=True)
 define('loglevel', default='debug')
 define('port', default=8888)
+define('proxy_user', default='')
+define('proxy_password', default='')
+define('proxy_url', default='')
 
 
 def directory(path):
@@ -26,7 +29,7 @@ def directory(path):
 
 def create_proxy():
     logger = logging.getLogger("tornado.application")
-    return proxy.initialize(logger=logger)
+    return proxy.initialize(proxy_url, proxy_user, proxy_password logger)
 
 
 agents = dict(agents=Agents())

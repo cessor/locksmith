@@ -1,6 +1,11 @@
 import pickle
 import base64
 
+
+class EmptyCookieJar(Exception):
+    pass
+
+
 class Cookies(object):
     # This is duplicated with web.cookiejar.cookies. Fix!
     def __init__(self, session):
@@ -8,6 +13,8 @@ class Cookies(object):
 
     def __str__(self):
         '''Returns the session's cookie jar as a string'''
+        if not self._session.cookies:
+            raise EmptyCookieJar()
         jar = self._session.cookies.copy()
         bytes = pickle.dumps(jar)
         string = base64.b64encode(bytes)
