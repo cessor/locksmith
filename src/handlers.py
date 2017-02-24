@@ -108,6 +108,7 @@ class Auth(RequestHandler):
             cookies = self._proxy.login()
             self.finish(cookies)
             return
+
         except Exception as e:
             print(e)
             # Expectation Failed
