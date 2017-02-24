@@ -63,7 +63,8 @@ class Proxy(object):
         if not response.status_code == 200:
             self._logger.info('Could not log in.')
             raise NotLoggedIn()
-
+        self._logger.debug(response.content)
+        self._logger.debug(session.cookies)
         return self._pickled_cookie_jar(session)
 
 
