@@ -39,7 +39,15 @@ def configure():
     options.parse_command_line()
 
     agents = dict(agents=Agents())
-    proxy = create_proxy(options)
+
+    logger = logging.getLogger('tornado.application')
+
+    proxy_ = proxy.initialize(
+        options.proxy_url,
+        options.proxy_user,
+        options.proxy_password,
+        logger
+    )
 
     routes = [
         url(r"/?", Home, agents),
@@ -51,15 +59,7 @@ def configure():
         url((
             r"/auth/([^/]*)"),
             Auth,
-            dict(
-                agents=Agents(),
-                proxy=proxy.initialize(
-                    options.proxy_url,
-                    options.proxy_user,
-                    options.proxy_password,
-                    logger
-                )
-            )),
+            dict(agents=Agents(), proxy=proxy_)),
         url(
             r'/(favicon\.ico)',
             StaticFileHandler,
