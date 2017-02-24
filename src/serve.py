@@ -29,7 +29,7 @@ def directory(path):
 
 def create_proxy():
     logger = logging.getLogger("tornado.application")
-    return proxy.initialize(proxy_url, proxy_user, proxy_password logger)
+    return proxy.initialize(proxy_url, proxy_user, proxy_password, logger)
 
 
 agents = dict(agents=Agents())
