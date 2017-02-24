@@ -38,7 +38,9 @@ class Proxy(object):
 
     def _pickled_cookie_jar(self, session):
         '''Encodes the cookie jar, to be depickled later.'''
-        return str(Cookies(session))
+        cookies = str(Cookies(session))
+        self._logger.debug(cookies)
+        return cookies
 
     def _submit_login_form(self, session):
         '''Get cookies by posting your credentials to the proxy landing page'''
