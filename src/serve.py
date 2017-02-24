@@ -27,26 +27,6 @@ def directory(path):
     return os.path.join(os.path.dirname(__file__), path)
 
 
-def create_proxy():
-    logger = logging.getLogger("tornado.application")
-    return proxy.initialize(proxy_url, proxy_user, proxy_password logger)
-
-
-agents = dict(agents=Agents())
-
-
-routes = [
-    url(r"/?", Home, agents),
-    url(r"/login", Login, dict(secret=Secret())),
-    url(r"/logout", Logout),
-    url(r"/add", AddAgent, agents),
-    url((r"/remove/([^/]*)"), RemoveAgent, agents),
-    url((r"/toggle/([^/]*)"), ToggleAgent, agents),
-    url((r"/auth/([^/]*)"), Auth, dict(agents=Agents(), proxy=create_proxy())),
-    url(r'/(favicon\.ico)', StaticFileHandler, dict(path=directory('static')))
-]
-
-
 def configure():
     # Read config file
     try:
@@ -57,6 +37,35 @@ def configure():
         logging.error(str(e))
 
     options.parse_command_line()
+
+    agents = dict(agents=Agents())
+    proxy = create_proxy(options)
+
+    routes = [
+        url(r"/?", Home, agents),
+        url(r"/login", Login, dict(secret=Secret())),
+        url(r"/logout", Logout),
+        url(r"/add", AddAgent, agents),
+        url((r"/remove/([^/]*)"), RemoveAgent, agents),
+        url((r"/toggle/([^/]*)"), ToggleAgent, agents),
+        url((
+            r"/auth/([^/]*)"),
+            Auth,
+            dict(
+                agents=Agents(),
+                proxy=proxy.initialize(
+                    options.proxy_url,
+                    options.proxy_user,
+                    options.proxy_password,
+                    logger
+                )
+            )),
+        url(
+            r'/(favicon\.ico)',
+            StaticFileHandler,
+            dict(path=directory('static'))
+        )
+    ]
 
     settings = dict(
         autoreaload=True,
