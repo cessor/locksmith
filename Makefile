@@ -4,12 +4,7 @@ locksmith:
 
 # Run source auth.sh
 run:
-	@docker run --name locksmith \
-	-e PROXY_USER=$(PROXY_USER) \
-	-e PROXY_PASSWORD=$(PROXY_PASSWORD) \
-	-e PROXY_URL=$(PROXY_URL) \
-	-d \
-	cessor/locksmith
+	@docker run --name locksmith -d cessor/locksmith
 
 clean:
 	docker stop locksmith
