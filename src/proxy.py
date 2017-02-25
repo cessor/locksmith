@@ -27,19 +27,17 @@ class Proxy(object):
     session: A session. Ideally, this is <requests.Session>
     proxy_url: The url to the proxies login form
     username, password: Proxy server credentials
-    logger: A logger object that can provide info if something goes wrong.
     '''
-    def __init__(self, session, proxy_url, username, password, logger):
+    def __init__(self, session, proxy_url, username, password):
         self._session = session
         self._proxy_url = proxy_url
         self._username = username
         self._password = password
-        self._logger = logger
 
     def _pickled_cookie_jar(self, session):
         '''Encodes the cookie jar, to be depickled later.'''
         cookies = str(Cookies(session))
-        self._logger.debug(cookies)
+        logging.debug(cookies)
         return cookies
 
     def _submit_login_form(self, session):
@@ -55,20 +53,21 @@ class Proxy(object):
         return response
 
     def login(self):
-        '''Returns the login cookies obtained by logging in at the proxy server. Raises an exception if this didn't work. '''
+        '''Returns the login cookies obtained by logging in at the proxy
+        server. Raises an exception if this didn't work. '''
         session = self._session()
         response = self._submit_login_form(session)
-        self._logger.info(response)
+        logging.info(response)
 
         if not response.status_code == 200:
-            self._logger.info('Could not log in.')
+            logging.info('Could not log in.')
             raise NotLoggedIn()
-        self._logger.debug(response.content)
-        self._logger.debug(session.cookies)
+            logging.debug(response.content)
+            logging.debug(session.cookies)
         return self._pickled_cookie_jar(session)
 
 
-def initialize(proxy_url, username, password, logger):
+def initialize(proxy_url, username, password):
 
     if not all([proxy_url, username, password]):
         raise ProxyConfigurationIncomplete()
@@ -77,6 +76,6 @@ def initialize(proxy_url, username, password, logger):
         session=requests.Session,
         proxy_url=proxy_url,
         username=username,
-        password=password,
-        logger=logger)
+        password=password
+    )
     return proxy

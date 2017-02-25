@@ -17,6 +17,9 @@ class Agents(object):
         self.connection = sqlite3.connect(DATABASE_FILE)
         self.initialize()
 
+    def __iter__(self):
+        return self.agents.__iter__()
+
     @property
     def agents(self):
         sql = '''select token, name, active from agents'''

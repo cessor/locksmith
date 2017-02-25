@@ -10,9 +10,9 @@ from tornado.options import define, options
 from tornado.web import Application, StaticFileHandler, url
 
 import proxy
+from handlers import *
 from model import Agents
 from secret import Secret
-from handlers import *
 
 
 define('debug', default=True)
@@ -23,30 +23,35 @@ define('proxy_password', default='')
 define('proxy_url', default='')
 
 
-def directory(path):
-    return os.path.join(os.path.dirname(__file__), path)
+def pwd():
+    return os.path.dirname(__file__)
 
 
-def configure():
+def in_working_directory(path):
+    return os.path.join(pwd(), path)
+
+
+def load_config_file():
     # Read config file
     try:
-        path = os.path.dirname(os.path.abspath(__file__))
-        config_file = os.path.join(path, 'config.cfg')
+        path = pwd()
+        config_file = in_working_directory('config.cfg')
         options.parse_config_file(config_file, final=False)
     except Exception as e:
         logging.error(str(e))
 
     options.parse_command_line()
 
-    agents = dict(agents=Agents())
+def configure():
 
-    logger = logging.getLogger('tornado.application')
+    load_config_file()
+
+    agents = dict(agents=Agents())
 
     proxy_ = proxy.initialize(
         options.proxy_url,
         options.proxy_user,
-        options.proxy_password,
-        logger
+        options.proxy_password
     )
 
     routes = [
@@ -58,24 +63,24 @@ def configure():
         url((r"/toggle/([^/]*)"), ToggleAgent, agents),
         url((
             r"/auth/([^/]*)"),
-            Auth,
+            Authenticate,
             dict(agents=Agents(), proxy=proxy_)),
         url(
             r'/(favicon\.ico)',
             StaticFileHandler,
-            dict(path=directory('static'))
+            dict(path=in_working_directory('static'))
         )
     ]
 
     settings = dict(
-        autoreaload=True,
+        autoreaload=options.debug,
         compress_response=True,
         cookie_secret=os.urandom(64),
         debug=options.debug,
         logging=options.loglevel,
         login_url='/login',
-        static_path=directory('static'),
-        template_path=directory('templates'),
+        static_path=in_working_directory('static'),
+        template_path=('templates'),
         xheaders=True,
         xsrf_cookies=True,
     )

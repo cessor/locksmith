@@ -16,13 +16,15 @@ class Authenticated(RequestHandler):
         return self.get_secure_cookie(USER_ID)
 
 
-class Home(Authenticated):
+class Private(Authenticated):
     def initialize(self, agents):
-        self._agents = agents
+        self.agents = agents
 
+
+class Home(Private):
     @fastauth
     def get(self):
-        self.render("index.html", agents=self._agents.agents)
+        self.render("index.html", agents=self.agents)
 
 
 class Login(RequestHandler):
@@ -49,49 +51,40 @@ class Logout(RequestHandler):
         self.redirect("/")
 
 
-class AddAgent(Authenticated):
-    def initialize(self, agents):
-        self._agents = agents
-
+class AddAgent(Private):
     @fastauth
     def post(self):
         name = self.get_argument("name", default='', strip=True)
         token = self.get_argument("token", default='', strip=True)
         if name and token:
-            self._agents.add(name, token)
+            self.agents.add(name, token)
 
         self.redirect("/")
 
 
-class ToggleAgent(Authenticated):
-    def initialize(self, agents):
-        self._agents = agents
-
+class ToggleAgent(Private):
     @fastauth
     def get(self, token):
-        self._agents.toggle(token)
+        self.agents.toggle(token)
         self.redirect("/")
 
 
-class RemoveAgent(Authenticated):
-    def initialize(self, agents):
-        self._agents = agents
-
+class RemoveAgent(Private):
     @fastauth
     def get(self, token):
-        self._agents.remove(token)
+        self.agents.remove(token)
         self.redirect("/")
 
 
-class Auth(RequestHandler):
+class Authenticate(RequestHandler):
     def initialize(self, agents, proxy):
-        '''Proxy must be a function'''
-        self._agents = agents
+        self.agents = agents
         self._proxy = proxy
 
     @gen.coroutine
     def get(self, token):
-        agent = self._agents.get(token)
+        agent = self.agents.get(token)
+
         if not agent:
             # Not Found
             self.set_status(404)
@@ -110,7 +103,7 @@ class Auth(RequestHandler):
             return
 
         except Exception as e:
-            print(e)
+            logging.info(e)
             # Expectation Failed
             self.set_status(417)
             self.finish()
