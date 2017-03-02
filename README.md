@@ -7,3 +7,5 @@ The locksmith manufactures keys.
  > Yeah can you open this door for us?
 
  > Oh, fair enough...
+
+Requires an assistant.

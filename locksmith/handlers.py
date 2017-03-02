@@ -1,3 +1,4 @@
+import logging
 from tornado import gen
 from tornado.web import RequestHandler, authenticated
 

@@ -25,12 +25,13 @@ define('proxy_password', default='')
 define('proxy_url', default='')
 
 
+def local(file):
+    return filesystem.in_working_directory(file, __file__)
+
+
 def load_config_file():
-    # Read config file
     try:
-        path = pwd()
-        config_file = filesystem.in_working_directory('config.cfg')
-        options.parse_config_file(config_file, final=False)
+        options.parse_config_file(local('config.cfg'), final=False)
     except Exception as e:
         logging.error(str(e))
 
@@ -62,7 +63,7 @@ def configure():
         url(
             r'/(favicon\.ico)',
             StaticFileHandler,
-            dict(path=filesystem.in_working_directory('static'))
+            dict(path=local('static'))
         )
     ]
 
@@ -73,7 +74,7 @@ def configure():
         debug=options.debug,
         logging=options.loglevel,
         login_url='/login',
-        static_path=filesystem.in_working_directory('static'),
+        static_path=local('static'),
         template_path=('templates'),
         xheaders=True,
         xsrf_cookies=True,
