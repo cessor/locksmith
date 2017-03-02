@@ -14,6 +14,8 @@ from handlers import *
 from model import Agents
 from secret import Secret
 
+from assistant import filesystem
+
 
 define('debug', default=True)
 define('loglevel', default='debug')
@@ -23,19 +25,11 @@ define('proxy_password', default='')
 define('proxy_url', default='')
 
 
-def pwd():
-    return os.path.dirname(__file__)
-
-
-def in_working_directory(path):
-    return os.path.join(pwd(), path)
-
-
 def load_config_file():
     # Read config file
     try:
         path = pwd()
-        config_file = in_working_directory('config.cfg')
+        config_file = filesystem.in_working_directory('config.cfg')
         options.parse_config_file(config_file, final=False)
     except Exception as e:
         logging.error(str(e))
@@ -68,7 +62,7 @@ def configure():
         url(
             r'/(favicon\.ico)',
             StaticFileHandler,
-            dict(path=in_working_directory('static'))
+            dict(path=filesystem.in_working_directory('static'))
         )
     ]
 
@@ -79,7 +73,7 @@ def configure():
         debug=options.debug,
         logging=options.loglevel,
         login_url='/login',
-        static_path=in_working_directory('static'),
+        static_path=filesystem.in_working_directory('static'),
         template_path=('templates'),
         xheaders=True,
         xsrf_cookies=True,
