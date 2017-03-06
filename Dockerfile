@@ -8,7 +8,6 @@ RUN curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
 RUN python3 get-pip.py
 RUN pip3 install tornado
 RUN pip3 install requests
-RUN pip3 install https://github.com/cessor/assistant/archive/master.zip
 
 ADD ./locksmith /var/locksmith
 
