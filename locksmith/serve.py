@@ -78,7 +78,7 @@ def configure():
         logging=options.loglevel,
         login_url='/login',
         static_path=local('static'),
-        template_path=('templates'),
+        template_path=local('templates'),
         xheaders=True,
         xsrf_cookies=True,
     )
