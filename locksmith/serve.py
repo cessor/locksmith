@@ -14,8 +14,6 @@ from handlers import *
 from model import Agents
 from secret import Secret
 
-from assistant import filesystem
-
 
 define('debug', default=True)
 define('loglevel', default='debug')
@@ -25,8 +23,12 @@ define('proxy_password', default='')
 define('proxy_url', default='')
 
 
+def pwd():
+    return os.path.dirname(__file__)
+
+
 def local(file):
-    return filesystem.in_working_directory(file, __file__)
+    return os.path.join(pwd(), file)
 
 
 def load_config_file():
@@ -36,6 +38,7 @@ def load_config_file():
         logging.error(str(e))
 
     options.parse_command_line()
+
 
 def configure():
 
